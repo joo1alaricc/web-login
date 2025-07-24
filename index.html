@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Panel</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        h2 {
+            color: #1e3c72;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.1);
+        }
+        button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.2);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.3);
+        }
+        .back-button {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            margin-top: 15px;
+        }
+        .back-button:hover {
+            background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+        }
+        .section {
+            display: none;
+        }
+        .active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+        .success-message {
+            color: #155724;
+            font-size: 18px;
+            line-height: 1.6;
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            color: #721c24;
+            font-size: 14px;
+            margin-top: 10px;
+            min-height: 20px;
+            background: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+        }
+        .loading {
+            display: none;
+            color: #1e3c72;
+            font-size: 14px;
+        }
+        .success-check {
+            font-size: 48px;
+            color: #28a745;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 30px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body id="background-body">
+    <div class="container">
+        <div class="logo">🔒</div>
+        
+        <!-- Nomor Telepon Section -->
+        <div id="phone-section" class="section active">
+            <h2>Masukkan Nomor Telepon</h2>
+            <div class="form-group">
+                <input type="tel" id="phone" placeholder="Contoh: 6282245682288" required>
+            </div>
+            <button onclick="checkPhone()">Lanjutkan</button>
+            <div id="phone-error" class="error"></div>
+            <div id="phone-loading" class="loading">Memverifikasi...</div>
+        </div>
+
+        <!-- Username Section -->
+        <div id="username-section" class="section">
+            <h2>Masukkan Username</h2>
+            <div class="form-group">
+                <input type="text" id="username" placeholder="Username" required>
+            </div>
+            <button onclick="checkUsername()">Lanjutkan</button>
+            <button class="back-button" onclick="showSection('phone-section')">Kembali</button>
+            <div id="username-error" class="error"></div>
+            <div id="username-loading" class="loading">Memverifikasi...</div>
+        </div>
+
+        <!-- Password Section -->
+        <div id="password-section" class="section">
+            <h2>Masukkan Password</h2>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+            <button onclick="checkPassword()">Lanjutkan</button>
+            <button class="back-button" onclick="showSection('username-section')">Kembali</button>
+            <div id="password-error" class="error"></div>
+            <div id="password-loading" class="loading">Memverifikasi...</div>
+        </div>
+
+        <!-- Success Section -->
+        <div id="success-section" class="section">
+            <div class="success-check">✓</div>
+            <h2>Verifikasi Berhasil!</h2>
+            <p class="success-message">Data sudah di simpan. Silahkan hubungkan bot di panel Pterodactyl.</p>
+        </div>
+    </div>
+
+    <audio id="success-audio" preload="auto"></audio>
+
+    <script src="config.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
