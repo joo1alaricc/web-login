@@ -4,11 +4,9 @@ let currentUser = null;
 let userPhone = null;
 let audioElement = null;
 
-// Inisialisasi saat halaman dimuat
 document.addEventListener('DOMContentLoaded', function() {
     initializeApp();
     
-    // Tambahkan event listener untuk Enter key
     document.getElementById('phone').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') checkPhone();
     });
@@ -22,21 +20,18 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Inisialisasi aplikasi
 function initializeApp() {
     loadUserData();
     setupBackground();
     setupAudio();
 }
 
-// Setup background image
 function setupBackground() {
     if (CONFIG.BACKGROUND_IMAGE) {
         document.getElementById('background-body').style.backgroundImage = `url('${CONFIG.BACKGROUND_IMAGE}')`;
     }
 }
 
-// Setup audio element
 function setupAudio() {
     if (CONFIG.SUCCESS_AUDIO) {
         const audio = document.getElementById('success-audio');
@@ -45,7 +40,6 @@ function setupAudio() {
     }
 }
 
-// Load data pengguna dari GitHub
 function loadUserData() {
     showLoading('phone');
     
@@ -67,31 +61,28 @@ function loadUserData() {
         });
 }
 
-// Fungsi untuk menampilkan loading
 function showLoading(section) {
     document.getElementById(`${section}-loading`).style.display = 'block';
 }
 
-// Fungsi untuk menyembunyikan loading
 function hideLoading(section) {
     document.getElementById(`${section}-loading`).style.display = 'none';
 }
 
-// Fungsi untuk menampilkan section tertentu
 function showSection(sectionId) {
-    // Sembunyikan semua section
+    
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
     });
     
-    // Tampilkan section yang diminta
+    
     document.getElementById(sectionId).classList.add('active');
     
-    // Clear errors
+
     document.querySelectorAll('.error').forEach(el => el.innerText = '');
 }
 
-// Validasi Nomor Telepon
+
 function checkPhone() {
     const phone = document.getElementById('phone').value.trim();
     const errorDiv = document.getElementById('phone-error');
@@ -120,7 +111,7 @@ function checkPhone() {
     }
 }
 
-// Validasi Username
+
 function checkUsername() {
     const username = document.getElementById('username').value.trim();
     const errorDiv = document.getElementById('username-error');
@@ -139,7 +130,6 @@ function checkUsername() {
     }
 }
 
-// Validasi Password dan simpan status
 function checkPassword() {
     const password = document.getElementById('password').value.trim();
     const errorDiv = document.getElementById('password-error');
@@ -158,39 +148,36 @@ function checkPassword() {
     }
 }
 
-// Simpan status pengguna ke status.json
 function saveUserStatus() {
     showLoading('password');
     
-    // Buat objek status baru
+
     const newStatus = {
         nomor: userPhone,
         status: true
     };
     
-    // Untuk demo purposes, langsung tampilkan sukses
-    // Karena GitHub API membutuhkan autentikasi untuk write operations
+
     setTimeout(() => {
         hideLoading('password');
         showSection('success-section');
         playSuccessSound();
     }, 1500);
     
-    // Implementasi nyata dengan GitHub API:
-    /*
+    
     fetch(CONFIG.GITHUB_STATUS_URL)
         .then(response => response.json())
         .then(data => {
-            // Parse existing data (decode base64)
+            /
             let statusData = JSON.parse(atob(data.content));
             
-            // Tambahkan status baru
+            
             statusData.push(newStatus);
             
-            // Encode kembali ke base64
+            
             const updatedContent = btoa(JSON.stringify(statusData, null, 2));
             
-            // Update file di GitHub
+            
             return fetch(CONFIG.GITHUB_STATUS_URL, {
                 method: 'PUT',
                 headers: {
@@ -218,10 +205,10 @@ function saveUserStatus() {
             hideLoading('password');
             document.getElementById('password-error').innerText = 'Gagal menyimpan data. Silakan coba lagi.';
         });
-    */
+    
 }
 
-// Putar suara sukses
+
 function playSuccessSound() {
     if (audioElement) {
         audioElement.play().catch(e => console.log('Audio play failed:', e));
