@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verifikasi Data</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 36px;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(30, 60, 114, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(30, 60, 114, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(30, 60, 114, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-message {
+            color: #1e3c72;
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        .success-icon {
+            font-size: 60px;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e1e8ed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #666;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .step.active {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .step.completed {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            width: 30px;
+            height: 2px;
+            background: #e1e8ed;
+            transform: translateY(-50%);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #f44336;
+            margin-top: 10px;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .status-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">✓</div>
+        <h1>Verifikasi Data</h1>
+        <p class="subtitle">Silahkan masukkan data Anda dengan benar</p>
+        
+        <div class="step-indicator">
+            <div class="step active" id="step1">1</div>
+            <div class="step" id="step2">2</div>
+            <div class="step" id="step3">3</div>
+        </div>
+        
+        <!-- Form Nomor Telepon -->
+        <div id="phoneForm">
+            <div class="form-group">
+                <label for="phoneNumber">Nomor Telepon</label>
+                <input type="tel" id="phoneNumber" placeholder="Masukkan nomor telepon" required>
+                <div class="error-message hidden" id="phoneError"></div>
+            </div>
+            <button id="phoneSubmit">Lanjutkan</button>
+        </div>
+        
+        <!-- Form Username -->
+        <div id="usernameForm" class="hidden">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" placeholder="Masukkan username" required>
+                <div class="error-message hidden" id="usernameError"></div>
+            </div>
+            <button id="usernameSubmit">Lanjutkan</button>
+        </div>
+        
+        <!-- Form Password -->
+        <div id="passwordForm" class="hidden">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Masukkan password" required>
+                <div class="error-message hidden" id="passwordError"></div>
+            </div>
+            <button id="passwordSubmit">
+                <span id="buttonText">Verifikasi</span>
+            </button>
+            <div id="statusMessage" class="status-message hidden"></div>
+        </div>
+        
+        <!-- Success Message -->
+        <div id="successMessage" class="hidden">
+            <div class="success-icon">✓</div>
+            <div class="success-message">
+                Data sudah di simpan. Silahkan hubungkan bot di panel Pterodactyl.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Config - akan diisi oleh pengguna
+        const config = {
+            githubApiUrl: 'https://raw.githubusercontent.com/joo1alaricc/dimasnathan/main/erlic.json',
+            statusApiUrl: 'https://api.github.com/repos/joo1alaricc/dimasnathan/contents/status.json',
+            audioUrl: 'https://files.catbox.moe/my4nqf.mp3',
+            imageUrl: 'https://files.catbox.moe/snga5o.jpeg',
+            githubToken: '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' // Token untuk akses GitHub API
+        };
+
+        // Data pengguna
+        let userData = {
+            nomor: '',
+            username: '',
+            password: ''
+        };
+
+        // DOM Elements
+        const phoneForm = document.getElementById('phoneForm');
+        const usernameForm = document.getElementById('usernameForm');
+        const passwordForm = document.getElementById('passwordForm');
+        const successMessage = document.getElementById('successMessage');
+        
+        const phoneInput = document.getElementById('phoneNumber');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        
+        const phoneSubmit = document.getElementById('phoneSubmit');
+        const usernameSubmit = document.getElementById('usernameSubmit');
+        const passwordSubmit = document.getElementById('passwordSubmit');
+        
+        const step1 = document.getElementById('step1');
+        const step2 = document.getElementById('step2');
+        const step3 = document.getElementById('step3');
+        
+        const phoneError = document.getElementById('phoneError');
+        const usernameError = document.getElementById('usernameError');
+        const passwordError = document.getElementById('passwordError');
+        
+        const buttonText = document.getElementById('buttonText');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Audio element
+        let audio = null;
+
+        // Inisialisasi audio
+        function initAudio() {
+            if (config.audioUrl) {
+                audio = new Audio(config.audioUrl);
+                audio.loop = true;
+                audio.play().catch(e => console.log("Autoplay prevented: ", e));
+            }
+        }
+
+        // Background image
+        function setBackgroundImage() {
+            if (config.imageUrl) {
+                document.body.style.backgroundImage = `url('${config.imageUrl}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            }
+        }
+
+        // Validasi data dengan GitHub
+        async function validateData() {
+            try {
+                const response = await fetch(config.githubApiUrl);
+                const validData = await response.json();
+                
+                return validData.some(item => 
+                    item.nomor === userData.nomor && 
+                    item.username === userData.username && 
+                    item.password === userData.password
+                );
+            } catch (error) {
+                console.error('Error validating ', error);
+                return false;
+            }
+        }
+
+        // Dapatkan konten status.json saat ini
+        async function getCurrentStatus() {
+            try {
+                const response = await fetch(config.statusApiUrl, {
+                    headers: {
+                        'Authorization': `token ${config.githubToken}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch current status');
+                }
+                
+                const data = await response.json();
+                return {
+                    sha: data.sha,
+                    content: JSON.parse(atob(data.content))
+                };
+            } catch (error) {
+                console.error('Error fetching current status:', error);
+                return { sha: null, content: [] };
+            }
+        }
+
+        // Simpan status ke GitHub
+        async function saveStatusToGitHub() {
+            try {
+                showStatusMessage('Menyimpan data...', 'info');
+                
+                // Dapatkan konten saat ini
+                const { sha, content } = await getCurrentStatus();
+                
+                // Tambahkan data baru
+                const newEntry = {
+                    nomor: userData.nomor,
+                    status: true
+                };
+                
+                const updatedContent = [...content, newEntry];
+                
+                // Encode konten ke base64
+                const encodedContent = btoa(JSON.stringify(updatedContent, null, 2));
+                
+                // Kirim update ke GitHub
+                const response = await fetch(config.statusApiUrl, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${config.githubToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Add status for ${userData.nomor}`,
+                        content: encodedContent,
+                        sha: sha
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to update status file');
+                }
+                
+                showStatusMessage('Data berhasil disimpan!', 'success');
+                return true;
+            } catch (error) {
+                console.error('Error saving status to GitHub:', error);
+                showStatusMessage('Gagal menyimpan data. Silahkan coba lagi.', 'error');
+                return false;
+            }
+        }
+
+        // Tampilkan pesan status
+        function showStatusMessage(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.classList.remove('hidden', 'status-success', 'status-error');
+            
+            if (type === 'success') {
+                statusMessage.classList.add('status-success');
+            } else if (type === 'error') {
+                statusMessage.classList.add('status-error');
+            }
+            
+            statusMessage.classList.remove('hidden');
+        }
+
+        // Tampilkan error
+        function showError(element, message) {
+            element.textContent = message;
+            element.classList.remove('hidden');
+        }
+
+        // Sembunyikan error
+        function hideError(element) {
+            element.classList.add('hidden');
+        }
+
+        // Update step indicator
+        function updateStepIndicator(step) {
+            step1.className = 'step';
+            step2.className = 'step';
+            step3.className = 'step';
+            
+            if (step >= 1) step1.classList.add('completed');
+            if (step >= 2) step2.classList.add('completed');
+            if (step === 1) step1.classList.add('active');
+            if (step === 2) step2.classList.add('active');
+            if (step === 3) step3.classList.add('active');
+        }
+
+        // Event Listeners
+        phoneSubmit.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const phoneNumber = phoneInput.value.trim();
+            
+            if (!phoneNumber) {
+                showError(phoneError, 'Nomor telepon tidak boleh kosong');
+                return;
+            }
+            
+            hideError(phoneError);
+            userData.nomor = phoneNumber;
+            
+            phoneForm.classList.add('hidden');
+            usernameForm.classList.remove('hidden');
+            updateStepIndicator(2);
+        });
+
+        usernameSubmit.addEventListener('click', async function(e) {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            
+            if (!username) {
+                showError(usernameError, 'Username tidak boleh kosong');
+                return;
+            }
+            
+            hideError(usernameError);
+            userData.username = username;
+            
+            usernameForm.classList.add('hidden');
+            passwordForm.classList.remove('hidden');
+            updateStepIndicator(3);
+        });
+
+        passwordSubmit.addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            // Cek apakah token GitHub sudah diatur
+            if (!config.githubToken) {
+                showError(passwordError, 'Token GitHub belum diatur. Hubungi administrator.');
+                return;
+            }
+            
+            const password = passwordInput.value.trim();
+            
+            if (!password) {
+                showError(passwordError, 'Password tidak boleh kosong');
+                return;
+            }
+            
+            hideError(passwordError);
+            userData.password = password;
+            
+            // Disable tombol dan tampilkan loading
+            passwordSubmit.disabled = true;
+            buttonText.innerHTML = '<span class="loading"></span> Memverifikasi...';
+            
+            try {
+                // Validasi data
+                const isValid = await validateData();
+                
+                if (isValid) {
+                    // Simpan status ke GitHub
+                    const saveSuccess = await saveStatusToGitHub();
+                    
+                    if (saveSuccess) {
+                        // Tampilkan pesan sukses
+                        setTimeout(() => {
+                            passwordForm.classList.add('hidden');
+                            successMessage.classList.remove('hidden');
+                            updateStepIndicator(4);
+                            
+                            // Hentikan audio jika ada
+                            if (audio) {
+                                audio.pause();
+                            }
+                        }, 1500);
+                    }
+                } else {
+                    showError(passwordError, 'Data tidak valid. Silahkan cek kembali.');
+                }
+            } catch (error) {
+                console.error('Error during validation:', error);
+                showError(passwordError, 'Terjadi kesalahan. Silahkan coba lagi.');
+            } finally {
+                // Re-enable tombol
+                passwordSubmit.disabled = false;
+                buttonText.textContent = 'Verifikasi';
+            }
+        });
+
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStepIndicator(1);
+            setBackgroundImage();
+            initAudio();
+        });
+    </script>
+</body>
+</html>
