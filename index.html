@@ -403,97 +403,21 @@
 
         // Simpan ke GitHub
         function saveToGitHub(status) {
-            console.log('Mencoba menyimpan ke GitHub dengan token:', APP_CONFIG.GITHUB_TOKEN ? 'Token tersedia' : 'Token tidak tersedia');
-            
-            if (!APP_CONFIG.GITHUB_TOKEN || APP_CONFIG.GITHUB_TOKEN === 'ghp_YOUR_TOKEN_HERE') {
-                console.log('Token GitHub tidak valid, melewatkan penyimpanan');
-                return;
-            }
-            
-            // Langkah 1: Dapatkan file status.json
-            fetch(APP_CONFIG.GITHUB_STATUS_URL, {
-                headers: {
-                    'Authorization': `token ${APP_CONFIG.GITHUB_TOKEN}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            })
-                .then(response => {
-                    console.log('GET status response:', response.status);
-                    if (!response.ok) {
-                        if (response.status === 404) {
-                            // File tidak ditemukan, buat array baru
-                            console.log('File status.json tidak ditemukan, membuat baru');
-                            return { content: 'W10=', sha: null }; // Base64 untuk []
-                        }
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    console.log('File data diterima:', data);
-                    
-                    // Parse existing data
-                    let statusData = [];
-                    try {
-                        if (data.content) {
-                            statusData = JSON.parse(atob(data.content));
-                            console.log('Data yang ada:', statusData);
-                        }
-                    } catch (e) {
-                        console.log('File kosong atau tidak valid, membuat array baru');
-                        statusData = [];
-                    }
-                    
-                    // Tambahkan status baru
-                    statusData.push(status);
-                    console.log('Data setelah ditambah:', statusData);
-                    
-                    // Encode ke base64 dengan encoding yang aman
-                    const jsonString = JSON.stringify(statusData, null, 2);
-                    const updatedContent = btoa(unescape(encodeURIComponent(jsonString)));
-                    console.log('Content yang akan disimpan (base64):', updatedContent);
-                    
-                    // Update file di GitHub
-                    const requestBody = {
-                        message: `Add status for ${status.nomor}`,
-                        content: updatedContent
-                    };
-                    
-                    // Jika file sudah ada, sertakan SHA
-                    if (data.sha) {
-                        requestBody.sha = data.sha;
-                    }
-                    
-                    console.log('Request body:', requestBody);
-                    
-                    return fetch(APP_CONFIG.GITHUB_STATUS_URL, {
-                        method: 'PUT',
-                        headers: {
-                            'Authorization': `token ${APP_CONFIG.GITHUB_TOKEN}`,
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/vnd.github.v3+json'
-                        },
-                        body: JSON.stringify(requestBody)
-                    });
-                })
-                .then(response => {
-                    console.log('PUT response status:', response.status);
-                    if (!response.ok) {
-                        return response.text().then(text => {
-                            console.log('Response text:', text);
-                            throw new Error(`Gagal update file: ${response.status} - ${text}`);
-                        });
-                    }
-                    console.log('Status berhasil disimpan ke GitHub');
-                    return response.json();
-                })
-                .then(result => {
-                    console.log('Update berhasil:', result);
-                })
-                .catch(error => {
-                    console.error('Error menyimpan ke GitHub:', error);
-                });
-        }
+    fetch('https://yourdomain.com/webhook.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(status)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Data tersimpan:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
     </script>
 </body>
 </html>
