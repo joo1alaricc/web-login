@@ -4,5 +4,5 @@ const CONFIG = {
     GITHUB_STATUS_URL: 'https://api.github.com/repos/joo1alaricc/dimasnathan/contents/status.json',
     GITHUB_TOKEN: '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', 
     BACKGROUND_IMAGE: '', 
-    SUCCESS_AUDIO: '' 
+    SUCCESS_AUDIO: 'https://files.catbox.moe/my4nqf.mp3' 
 };
